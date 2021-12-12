@@ -19,6 +19,6 @@ Load Syntax:
     load iplist <path_to_list_of_ips.txt>     - Text File of plain text IP addresses you may have to
                                                 automatically check for SSH servers.
 Exit Syntax:
-    exit/quit/q                                      - Closes the program.
+    exit/quit/q                               - Closes the program.
 ```
 More Soon...
