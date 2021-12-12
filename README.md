@@ -8,9 +8,14 @@ SSH Tool For OSINT and then Cracking.
 # Usage:
 ```
 Scanner Syntax:
-                    scanner start/stop/status
-                    scanner timeout <interger_in_seconds>
-                    Scanner port <new_op_port>
-                    scanner adduser/rmuser <user_to_add>
-                    scanner log <new_log_file>```
+                    scanner start/stop/status                 - Sarts/stops/shows status of the scanner.
+                    scanner timeout <interger_in_seconds>     - Sts timeout to wait for each possible SSH server. Dont set too low.
+                    Scanner port <new_op_port>                - Scanner operating port. currently only uses one at a time.
+                    scanner adduser/rmuser <user_to_add>      - Ad users/remove users from try list. The more you add the longer it takes.
+                    scanner log <new_log_file>                - Canges the scanner log file to write to at the end.
+Load Syntax:
+                    load iplist <path_to_list_of_ips.txt>     - Text File of plain text IP addresses you may have to automatically check for SSH servers.
+Exit Syntax:
+                    exit                                      - Closes the program.
+```
 More Soon...
