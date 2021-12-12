@@ -56,6 +56,7 @@ class Cracker:
     stopscanner = False
     scanlogFile = "scan.log"
     userlist = ["root"]
+    IPList = []
     
     scannerport = 22
 
@@ -93,26 +94,47 @@ class Cracker:
 
 
     def sshscanner(self, userlist, port=0):
-        while True:
-            global stopscanner
-            address = self.randomIP()
+        if self.IPList == []:
+            print(" No IP List loaded. Generating random IPs.")
+            while True:
+                # global stopscanner
+                address = self.randomIP()
 
-            for user in userlist:
-                didRespond = self.tryssh(self.timeoutSECONDS, "root", address, self.scannerport)
+                for user in userlist:
+                    didRespond = self.tryssh(self.timeoutSECONDS, "root", address, self.scannerport)
 
-                if not didRespond:
-                    # print(f" {address} did not respond [PORT: 22]")
-                    self.failedAttempts+=1
-                else:
-                    # print(f"\n {address} is responsive! [PORT: 22]")
-                    self.responsiveIPs.append(address)
-                if self.stopscanner:
-                    print(" Stopped scanner.")
-                    print(" Scanner Stopped.")
-                    print(f" Found {len(self.responsiveIPs)} Responsive Servers.")
-                    print(f" Failed {self.failedAttempts} times.")
-                    print(f"Log: {self.scanlogFile}")
-                    break
+                    if not didRespond:
+                        # print(f" {address} did not respond [PORT: 22]")
+                        self.failedAttempts+=1
+                    else:
+                        # print(f"\n {address} is responsive! [PORT: 22]")
+                        self.responsiveIPs.append(address)
+                    if self.stopscanner:
+                        print(" Stopped scanner.")
+                        print(" Scanner Stopped.")
+                        print(f" Found {len(self.responsiveIPs)} Responsive Servers.")
+                        print(f" Failed {self.failedAttempts} times.")
+                        print(f"Log: {self.scanlogFile}")
+                        break
+        else:
+            print(f" Using list of {len(self.IPList)} addresses.")
+            for address in self.IPList:
+                for user in userlist:
+                    didRespond = self.tryssh(self.timeoutSECONDS, "root", address, self.scannerport)
+
+                    if not didRespond:
+                        # print(f" {address} did not respond [PORT: 22]")
+                        self.failedAttempts+=1
+                    else:
+                        # print(f"\n {address} is responsive! [PORT: 22]")
+                        self.responsiveIPs.append(address)
+                    if self.stopscanner:
+                        print(" Stopped scanner.")
+                        print(" Scanner Stopped.")
+                        print(f" Found {len(self.responsiveIPs)} Responsive Servers.")
+                        print(f" Failed {self.failedAttempts} times.")
+                        print(f"Log: {self.scanlogFile}")
+                        break
 
     def process(self):
         c = Coloring()
@@ -180,8 +202,6 @@ class Cracker:
                             elif res.lower() == "a":
                                 self.scanlogFile = parts[2]
                                 print(f" Changed Log File to: {self.scanlogFile}.")
-
-
                 except:
                     print(" Scanner Syntax:")
                     print(" scanner start/stop/status")
@@ -189,3 +209,21 @@ class Cracker:
                     print(" Scanner port <new_op_port>")
                     print(" scanner adduser/rmuser <user_to_add>")
                     print(" scanner log <new_log_file>")
+
+            elif parts[0] == "load":
+                try:
+                    if parts[1] == "iplist":
+                        path = parts[2]
+                        if not os.path.isfile(path):
+                            print(" That is not a file!")
+                        else:
+                            f = open(path, "r")
+                            ip_addresses = f.readlines()
+                            f.close()
+                            self.IPList = ip_addresses
+                            print(f" Loaded new list of {len(self.IPList)} addresses.")
+
+                except:
+                    print(" Load Syntax:")
+                    print(" load iplist <file.txt>")
+
