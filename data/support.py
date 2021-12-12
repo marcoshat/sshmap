@@ -61,6 +61,8 @@ class Cracker:
     scannerport = 22
 
     def logo(self):
+
+
         c = Coloring()
         logo = c.cyan+"""
             ███████╗███████╗██╗  ██╗███╗   ███╗ █████╗ ██████╗ 
@@ -82,10 +84,10 @@ class Cracker:
         return str(socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff))))
 
     def tryssh(self, timeout, user, server, port=0):
-        if port == 0:
+        if port == 22:
             result = self.execute(f'timeout {timeout}s ssh {user}@{server}')
         else:
-            result = self.execute(f'timeout {timeout}s ssh {user}@{server} -p {port}')
+            result = self.execute(f'timeout {timeout}s ssh -p {str(port)} {user}@{server}')
         if len(result) == 0:
             return False
         else:
@@ -226,4 +228,6 @@ class Cracker:
                 except:
                     print(" Load Syntax:")
                     print(" load iplist <file.txt>")
-
+            elif parts[0].lower() == "exit" or parts[0].lower() == "quit" or parts[0].lower() == "q":
+                print(" Quitting... ")
+                exit(1)
